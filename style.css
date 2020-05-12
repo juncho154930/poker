@@ -1,0 +1,26 @@
+body {
+	margin:0;
+	margin-bottom: 300px;
+}
+
+.button {
+	display: block;
+	background-color: #ccc;
+	height: 20px;
+	width: 100px;
+	font-size: 18px;
+	text-decoration: none;
+	border: 1px solid #000;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 20px 0;
+	color: #fff;
+}
+.button:hover {
+	background-color: #333;
+	cursor: pointer;
+}
+
+.image {
+	width: 100%;
+}
