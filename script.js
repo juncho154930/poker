@@ -1,11 +1,5 @@
-// check for duplicate cards
-
-// allow to pick your own hands
-// allow to pick cards on table
 // calculate chances of winning with variable amount of people
 // how much to bet call raise or fold
-
-
 
 
 // 10=jack, 11=q, 12=k, 13=A
@@ -13,7 +7,7 @@ var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 var suits = ['H', 'S', 'C', 'D'];
 
 var countHands = 0;
-var myHand = [];
+var playerHand = [];
 
 var cardOnTable = [];
 
@@ -22,6 +16,8 @@ var flopped = false;
 var turned = false;
 var rivered = false;
 
+var allCards = [];
+
 function getOccurrence(array, value) {
     var count = 0;
     array.forEach((v) => (v === value && count++));
@@ -29,23 +25,39 @@ function getOccurrence(array, value) {
 }
 
 //pick a random card
-function pickACard() {
-	// check for duplicate cards
+function pickACard(num, suit) {
+	//optionally choose your own num and suit
 	let card = [];
-
-	card[0] = numbers[Math.floor(Math.random() * 12) + 1];
-	card[1] = suits[Math.floor(Math.random() * 3) + 1];
+	card[0] = num && typeof num == 'number' ? num : numbers[Math.floor(Math.random() * 12) + 1];
+	if(typeof suit == 'string' && (suit.charAt(0) == 'H' || 
+		suit.charAt(0) == 'S' || 
+		suit.charAt(0) == 'C' ||
+		suit.charAt(0) == 'D')) {
+		card[1] = suit.charAt(0);
+	} else {
+		card[1] = suits[Math.floor(Math.random() * 3) + 1];
+	}
+	var allCardsJson = JSON.stringify(allCards);
+	var cardJson = JSON.stringify(card);
+	var checkDup = allCardsJson.indexOf(cardJson);
+	if(checkDup != -1){
+		// console.log('duplicate!');
+		card = pickACard();
+	} else {
+		allCards.push(card);
+	}
 	
 	return card;
 }
 
 function getTwoCards () {
 	if(!deltHands){
-		myHand[0] = pickACard();
-		myHand[1] = pickACard();
-		console.log('myHand:');
-		console.log(myHand[0]);
-		console.log(myHand[1]);
+		// playerHand[0] = pickACard(1, 'S');
+		playerHand[0] = pickACard();
+		playerHand[1] = pickACard();
+		console.log('playerHand:');
+		console.log(playerHand[0]);
+		console.log(playerHand[1]);
 		deltHands = true;
 	} else {
 		console.log('you already have cards');
@@ -85,7 +97,7 @@ function winningHand(){
 }
 
 function showHands() {
-	let allCards = myHand.concat(cardOnTable); // allcards = AC
+	// allCards = playerHand.concat(cardOnTable); // allcards = AC
 	let ACNumbers = [];
 	let ACSuits = [];
 
@@ -98,6 +110,9 @@ function showHands() {
 		// put all suits into 1 array
 		ACSuits[i] = card[1];
 	});
+
+	console.log('ACNumbers: ' + ACNumbers);
+	console.log('ACSuits: ' + ACSuits);
 
 	// temp set array
 	// ACNumbers = [2, 3, 4, 5, 6, 8, 12];
@@ -225,6 +240,7 @@ function showHands() {
 	// console.log('pairedCards: ' + pairedCards);
 	console.log('cardOccurance: ' + countCardOccurance);
 	console.log('biggestCard: ' + biggestCard + ' biggestHand: ' + biggestHand);
+	console.log(allCards);
 }
 
 
